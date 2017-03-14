@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Form</h1>
+<form method="post" action="/request">
+    <form>
+        <p>Who do you want to send the message to?: <input type="email" name="recipient" /></p>
+        <p>When should we send it?: <input type="datetime-local" name="sendTime" /></p>
+        <p>Message Subject: <input type="text" name="*subject" /></p>
+        <p>Message Body: <input type="text" name="*message" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+</body>
+</html>
