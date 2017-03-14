@@ -12,5 +12,6 @@ import java.net.PasswordAuthentication;
 public class PasswordAuthenticationConfiguration {
 
     @Bean PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication("username", "password".toCharArray());
     }
 }
