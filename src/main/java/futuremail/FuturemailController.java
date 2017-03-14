@@ -25,6 +25,7 @@ public class FuturemailController {
 
         FuturemailMessage futuremailMessage = new FuturemailMessage();
         futuremailMessage.setRecipient(params.getFirst("recipient"));
+        futuremailMessage.setSender(params.getFirst("sender"));
         futuremailMessage.setMessage(params.getFirst("message"));
         futuremailMessage.setSendTimeMS(new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss z").parse(params.getFirst("sendTime")).getTime());
         futuremailMessage.setSubject(params.getFirst("subject"));

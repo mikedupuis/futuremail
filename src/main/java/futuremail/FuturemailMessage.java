@@ -15,6 +15,7 @@ import java.util.Date;
 public class FuturemailMessage {
     @Id public String id;
     private String recipient;
+    private String sender;
     private String subject;
     private String message;
     private long submissionTimeMS;
@@ -35,6 +36,14 @@ public class FuturemailMessage {
 
     public void setRecipient(String recipient) {
         this.recipient = recipient;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public String getSubject() {
@@ -82,8 +91,15 @@ public class FuturemailMessage {
     }
 
     private String buildMessageBody() {
-        return
-                "<html><body><h3>Futuremail Message!</h3><br><p>" + getMessage() + "</p><br><small>sent by Futuremail.</small>";
+        StringBuilder messageBodyBuilder = new StringBuilder();
+        messageBodyBuilder.append("<html><body>");
+        messageBodyBuilder.append("<h3>Futuremail Message!</h3>");
+        messageBodyBuilder.append("<p>From: " + getSender() + "</p>");
+        messageBodyBuilder.append("<p>" + getMessage() + "</p>");
+        messageBodyBuilder.append("<small>sent by Futuremail.</small>");
+        messageBodyBuilder.append("</body></html>");
+
+        return messageBodyBuilder.toString();
     }
 
     public MimeMessagePreparator createMimeMessagePreparator() {
