@@ -29,7 +29,7 @@ public class FuturemailService {
     private List<FuturemailMessage> getScheduledMessages() {
         return mongoTemplate.find(
             new Query()
-                .addCriteria(Criteria.where("sent").is(false))
+                .addCriteria(Criteria.where("status").is("NEW"))
                 .addCriteria(Criteria.where("sendTimeMS").lt(System.currentTimeMillis()))
             , FuturemailMessage.class
         );
@@ -39,13 +39,14 @@ public class FuturemailService {
         for (FuturemailMessage futuremailMessage : getScheduledMessages()) {
             try {
                 this.javaMailSender.send(futuremailMessage.createMimeMessagePreparator());
+                futuremailMessage.setStatus(FuturemailMessageStatus.SENT);
             } catch (MailException ex){
-                System.err.println(ex.getMessage());
+                futuremailMessage.setStatus(FuturemailMessageStatus.FAILED);
             } finally {
                 // `sent` will always be set to true to prevent repeated attempts to send a messages
                 mongoTemplate.updateFirst(
                         new Query(Criteria.where("id").is(futuremailMessage.getId())),
-                        new Update().set("sent", true),
+                        new Update().set("status", futuremailMessage.getStatus()),
                         FuturemailMessage.class);
             }
         }

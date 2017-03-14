@@ -1,5 +1,6 @@
 package futuremail;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 
@@ -13,14 +14,30 @@ import java.util.Date;
  * Created by Mike on 3/11/2017.
  */
 public class FuturemailMessage {
-    @Id public String id;
+    @Id
+    @JsonProperty("id")
+    public String id;
+
+    @JsonProperty("recipient")
     private String recipient;
+
+    @JsonProperty("sender")
     private String sender;
+
+    @JsonProperty("subject")
     private String subject;
+
+    @JsonProperty("message")
     private String message;
+
+    @JsonProperty("submissionTimeMS")
     private long submissionTimeMS;
+
+    @JsonProperty("sendTimeMS")
     private long sendTimeMS;
-    private boolean sent;
+
+    @JsonProperty("status")
+    private FuturemailMessageStatus status;
 
     public String getId() {
         return id;
@@ -78,16 +95,16 @@ public class FuturemailMessage {
         this.sendTimeMS = sendTimeMS;
     }
 
-    public boolean isSent() {
-        return sent;
-    }
-
-    public void setSent(boolean sent) {
-        this.sent = sent;
-    }
-
     public boolean isValid() {
         return sendTimeMS > submissionTimeMS;
+    }
+
+    public FuturemailMessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(FuturemailMessageStatus status) {
+        this.status = status;
     }
 
     private String buildMessageBody() {
