@@ -6,12 +6,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.MediaType;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Mike on 3/11/2017.
@@ -45,7 +43,7 @@ public class FuturemailController {
         if (futuremailMessage.getStatus() != FuturemailMessageStatus.NEW)
             return "message has already been handled";
 
-        futuremailMessage.setStatus(FuturemailMessageStatus.CANCELED);
+        futuremailMessage.setStatus(FuturemailMessageStatus.CANCELLED);
 
         mongoTemplate.updateFirst(
                 new Query(Criteria.where("id").is(futuremailMessage.getId())),
@@ -54,5 +52,18 @@ public class FuturemailController {
         );
 
         return "success";
+    }
+
+    @GetMapping(value = {"/futuremails", "/futuremails/{status}"})
+    public @ResponseBody List<FuturemailMessage> getFuturemails(@PathVariable("status") Optional<String> status) {
+        if (status.isPresent()) {
+            return mongoTemplate.find(
+                    new Query(Criteria.where("status").is(status.get().toUpperCase())),
+                    FuturemailMessage.class
+            );
+        }
+        else {
+            return mongoTemplate.findAll(FuturemailMessage.class);
+        }
     }
 }

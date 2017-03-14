@@ -6,6 +6,6 @@ package futuremail;
 public enum FuturemailMessageStatus {
     NEW,
     SENT,
-    CANCELED,
+    CANCELLED,
     FAILED
 }
