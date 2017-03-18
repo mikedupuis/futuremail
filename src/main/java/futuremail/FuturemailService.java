@@ -35,7 +35,7 @@ public class FuturemailService {
         );
     }
 
-    @Scheduled(fixedRate = 60000) public void sendFuturemailMessages() {
+    @Scheduled(cron = "* * * * *") public void sendFuturemailMessages() {
         for (FuturemailMessage futuremailMessage : getScheduledMessages()) {
             try {
                 this.javaMailSender.send(futuremailMessage.createMimeMessagePreparator());
@@ -43,7 +43,6 @@ public class FuturemailService {
             } catch (MailException ex){
                 futuremailMessage.setStatus(FuturemailMessageStatus.FAILED);
             } finally {
-                // `sent` will always be set to true to prevent repeated attempts to send a messages
                 mongoTemplate.updateFirst(
                         new Query(Criteria.where("id").is(futuremailMessage.getId())),
                         new Update().set("status", futuremailMessage.getStatus()),

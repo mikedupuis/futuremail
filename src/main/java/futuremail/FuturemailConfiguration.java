@@ -1,27 +1,36 @@
 package futuremail;
 
+import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import javax.mail.Session;
 import java.net.PasswordAuthentication;
-import java.util.Map;
 import java.util.Properties;
 
 /**
- * Created by Mike on 3/11/2017.
+ * @author Mike
+ *         Created on 3/17/2017
  */
 @Configuration
-public class JavaMailSenderConfiguration {
-    @Autowired private PasswordAuthentication passwordAuthentication;
+public class FuturemailConfiguration {
 
-    @Bean public JavaMailSender getMailSender() {
+    @Bean
+    public MongoTemplate getMongoTemplate() {
+        return new MongoTemplate(new MongoClient("localhost"), "futuremail");
+    }
+
+    @Bean
+    PasswordAuthentication getPasswordAuthentication(@Value("username") String username, @Value("password") String password) {
+        return new PasswordAuthentication(username, password.toCharArray());
+    }
+
+    @Bean
+    public JavaMailSender getMailSender(@Autowired PasswordAuthentication passwordAuthentication) {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
         javaMailSender.setHost("smtp.gmail.com");
