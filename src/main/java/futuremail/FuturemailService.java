@@ -35,7 +35,7 @@ public class FuturemailService {
         );
     }
 
-    @Scheduled(cron = "* * * * *") public void sendFuturemailMessages() {
+    @Scheduled(cron = "* * * * * *") public void sendFuturemailMessages() {
         for (FuturemailMessage futuremailMessage : getScheduledMessages()) {
             try {
                 this.javaMailSender.send(futuremailMessage.createMimeMessagePreparator());
